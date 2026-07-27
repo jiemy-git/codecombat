@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN rm -f package-lock.json \
     && npm install -g npm@7.24.2 \
     && npm config set registry https://registry.npmjs.org/ \
-    && npm install --ignore-engines
+    && npm install --ignore-engines --legacy-peer-deps
 
 COPY . .
 
