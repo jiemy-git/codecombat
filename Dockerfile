@@ -8,7 +8,10 @@ COPY package*.json ./
 RUN rm -f package-lock.json \
     && npm install -g npm@7.24.2 \
     && npm config set registry https://registry.npmjs.org/ \
-    && npm install --ignore-engines --legacy-peer-deps
+    && npm install --ignore-engines --force
+
+# 允许 bower 以 root 运行
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 COPY . .
 
