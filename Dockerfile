@@ -1,37 +1,24 @@
-<<<<<<< HEAD
-FROM node:22.22.1
-
-WORKDIR /coco
-RUN apt-get update && \
-    apt-get install -y git python3 make g++ && \
-    apt-get clean
-RUN npm install -g bower
-COPY package*.json ./
-RUN npm install
-=======
 FROM node:10.24.1
 
-# 修复 Debian 9 归档源
+# 修复 Debian 9 源
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list \
     && sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list \
     && sed -i '/stretch-updates/d' /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y python build-essential
+RUN apt-get update && apt-get install -y python build-essential libssl-dev
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN rm -f package-lock.json
-RUN npm install --registry=https://registry.npmmirror.com --ignore-engines
+RUN rm -f package-lock.json \
+    && npm install -g npm@6.14.17 \
+    && npm config set registry https://registry.npmjs.org/ \
+    && npm install --ignore-engines --no-optional
 
->>>>>>> d8f84c22555b828a99fd2a7dcc83c83777d09fd0
 COPY . .
+
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 EXPOSE 3000
-<<<<<<< HEAD
-
-CMD ["node", "index.js"]
-=======
 CMD ["npm", "start"]
->>>>>>> d8f84c22555b828a99fd2a7dcc83c83777d09fd0
